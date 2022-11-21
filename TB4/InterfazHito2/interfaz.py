@@ -1,60 +1,53 @@
 #Antes, descargar las librerias "Tkinter" y "pillow".
 from tkinter import *
 from PIL import ImageTk, Image
+from SecondWindow import segundaVentana
 
+framelist = []
+frame_index = 0
+resize_img = []
+count = 0
 #Llamado a la funcion de la ventana
-ventana = Tk();
+ventana = Tk()
 
 #Titulo de la ventana
-ventana.title("Grafo de Restaurantes");
+ventana.title("RuTop")
+
+#Background
+ventana.config(background='#9CDCE8')
 
 #Cambiar el icono del programa
-ventana.iconbitmap("")
+ventana.iconbitmap("ping.ico")
 
 #Size de la ventana
-ventana.geometry("400x400");
+ventana.geometry("400x400")
 
-#Primer texto
-lbl1=Label(ventana , text="Bienvenido al grafo de Restaurantes",bg="green");
-lbl1.place(relx=0.14,rely=0.05,width=300,height=30);
+#Implementación de la imágen
+image=Image.open("mundomaps.gif")
+frames=image.n_frames
+imageObject=[PhotoImage(file="mundomaps.gif", format = f"gif -index {i}") for i in range(frames)]
+showAnimation = None
+def animation(count):
+    global showAnimation
+    newImage=imageObject[count]
+    gif_Label.configure(image=newImage)
+    count += 1
+    if count == frames:
+        count = 0
+    showAnimation = ventana.after(20 , lambda: animation(count))
+gif_Label=Label(ventana,image="")
+gif_Label.place(relx=0.19,rely=0.1, width=250,height=250)
 
-#Implementacion de Imagen
-image=Image.open("Imagenes/maps.png") #Asignacion de la foto a la variable image
-image=image.resize((200,200), Image.ANTIALIAS);
-nodoimg = ImageTk.PhotoImage(image);
-
-lbl_img = Label(ventana,image=nodoimg);
-lbl_img.place(relx=0.22,rely=0.15)
-
-#Funcion del botón para abrir la segunda ventana
-
-def segundaVentana ():
-    #Intento de nueva ventana
-
-    ventana.destroy();
-    ventana2=Tk();
-    ventana2.title("Ventana de funcionamiento");
-    ventana2.geometry("800x600");
-    lbl2w_0= Label(ventana2, text="Ingresar punto incial").pack();
-    write2w_0=Entry(ventana2,width=20,borderwidth=2).pack();
-    lbl2w_1 = Label(ventana2, text="Ingresar punto final").pack();
-    write2w_1 = Entry(ventana2, width=20, borderwidth=2).pack();
-    btn2w_0=Button(ventana2,text="Buscar").pack();
-    lbl2w_2 = Label(ventana2, text="El mejor camino a tomar es el siguiente: ", bg="#E5E5E5").pack();
-    lbl2w_3 = Label(ventana2, text="A->B, B->C, C->D",bg="#E5E5E5").pack();
-    lbl2w_4 = Label(ventana2, text="Peso total recorrido:", bg="#E5E5E5").pack();
-    lbl2w_5 = Label(ventana2, text="           25            ", bg="#E5E5E5").pack();
-    lbl2w_5 = Label(ventana2, text="                         ").pack();
-    lbl2w_5 = Label(ventana2, text="                         ").pack();
-    lbl2w_6 = Label(ventana2, text="◘Imagen Referencial.jpg").pack()
-
+#TITULO
+lbl1=Label(ventana , text="Bienvenido a RuTop",bg="#1C71B8", font='bold')
+lbl1.place(relx=0.17,rely=0.01,width=270,height=30)
 
 #Implementacion de botones
-btn1=Button(ventana,text="Comenzar",command=segundaVentana);
-btn2=Button(ventana,text="Salir de la App",command=ventana.quit);
+btn1=Button(ventana,text="Comenzar",command=segundaVentana,bg="#71A7A2")
 
+btn2=Button(ventana,text="Salir de la App",command=ventana.quit,bg="#71A7A2")
+btn1.place(relx=0.4,rely=0.76)
+btn2.place(relx=0.376,rely=0.85)
 
-btn1.place(relx=0.4,rely=0.68);
-btn2.place(relx=0.37,rely=0.76);
-
-ventana.mainloop();
+animation(count)
+ventana.mainloop()
